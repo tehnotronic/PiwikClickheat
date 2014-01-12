@@ -1,0 +1,8 @@
+<Files "^$">
+	Satisfy any
+	Allow from all
+</Files>
+<Files ~ "^click\.php$">
+	Satisfy any
+	Allow from all
+</Files>

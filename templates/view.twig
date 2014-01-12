@@ -1,0 +1,68 @@
+<link href="{{ clickheat_server|raw }}styles/piwik.css" rel="stylesheet" />
+<script type="text/javascript" src="{{ clickheat_server|raw }}js/admin.js"></script>
+<div id="contenu">
+	<span id="cleaner"></span>
+	
+	<form action="{{ clickheat_server|raw }}index.php" method="get" onsubmit="return false;" id="clickForm">
+	<table cellpadding="0" cellspacing="1" border="0" width="100%">
+	<tr>
+		<th>{{ clickheat_group }}</th>
+		<td><select name="group" id="formGroup" onchange="hideGroupLayout(); loadIframe();">
+{% for key, value in clickheat_groups %}
+                <option value="{{ key }}">{{ value }}</option>
+{% endfor %}
+		    </select> <a href="#" onclick="showGroupLayout(); return false;"><img src="{{ clickheat_path }}images/layout.png" width="16" height="16" align="absmiddle" alt="Layout" /></a><a href="#" onclick="updateHeatmap(); return false;"><img src="{{ clickheat_path }}images/reload.png" width="16" height="16" align="absmiddle" alt="Refresh" /></a></td>
+		<th>{{ clickheat_browser }}</th>
+		<td><select name="browser" id="formBrowser" onchange="updateHeatmap();">
+{% for key, value in clickheat_browsers %}
+                <option value="{{ key }}">{{ value }}</option>
+{% endfor %}
+		</select></td>
+		<td rowspan="2"><a href="#" onclick="adminCookie(); return false;">{{ 'Clickheat_LOG_MY_CLICKS'|translate }}</a><br /><a href="#" onclick="showJsCode(); return false;">Javascript</a></td>
+	</tr>
+	<tr>
+		<th>{{ clickheat_heatmap }}</th><td><input type="checkbox" id="formHeatmap" name="heatmap"{{ clickheat_force_heatmap }} onchange="updateHeatmap();" /><span id="alphaSelector"></span></td>
+		<th>{{ clickheat_screen }}</th><td><select name="screen" id="formScreen" onchange="resizeDiv(); updateHeatmap();">
+{% for key, value in clickheat_screens %}
+                <option value="{{ key }}">{{ value }}</option>
+{% endfor %}
+		</select></td>
+	</tr>
+	</table>
+	</form>
+</div>
+<div id="divPanel2" onmouseover="showPanel();" onclick="hidePanel();"><img src="{{ clickheat_server|raw }}images/arrow-up.png" width="11" height="6" alt="" /></div>
+<div id="layoutDiv2"></div>
+<div id="overflowDiv2">
+	<div id="pngDiv2"></div>
+	<p><iframe src="{{ ch_empty }}" id="webPageFrame2" onload="window.setTimeout('cleanIframe();', 2000);" scrolling="no" width="50" height="0" frameborder="0"></iframe></p>
+</div>
+<script type="text/javascript">
+pleaseWait = '{{ clickheat_loading }}';
+cleanerRunning = '{{ clickheat_cleaner }}';
+isJsOkay = '<a href="#" onclick="showJsCode(); return false;">{{ "Clickheat_ERROR_JAVASCRIPT"|translate }}</a>';
+jsAdminCookie = '{{ clickheat_admincookie }}';
+hideIframes = {{ clickheat_iframes }};
+hideFlashes = {{ clickheat_flashes }};
+isPiwikModule = true;
+scriptPath = '{{ clickheat_server|raw }}';
+scriptIndexPath = '{{ clickheat_index }}';
+currentDate = [{{ clickheat_day }}, {{ clickheat_month }}, {{ clickheat_year }}, {{ clickheat_day }}, {{ clickheat_month }}, {{ clickheat_year }}];
+currentRange = '{{ clickheat_range }}';
+currentAlpha = {{ clickheat_alpha }};
+weekDays = new Array();
+
+/** Draw the alpha selector */
+drawAlphaSelector('alphaSelector', 30);
+
+/** Resize the main div */
+resizeDiv();
+
+/** Load iframe (which will load the heatmap once the info is okay) */
+loadIframe();
+
+/** Run cleaner */
+runCleaner();
+
+updateHeatmap();
+</script>
